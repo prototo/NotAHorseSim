@@ -27,12 +27,15 @@ namespace NotAHorseSim
 
         public void Update()
         {
-
+            Random rand = new Random();
+            position.X += rand.Next(-1, 2);
+            position.Y += rand.Next(-1, 2);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position);
+            Vector2 draw_position = new Vector2(position.X * Map.TILESIZE, position.Y * Map.TILESIZE);
+            spriteBatch.Draw(texture, draw_position);
         }
 
         public int getWidth()

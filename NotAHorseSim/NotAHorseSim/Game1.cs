@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace NotAHorseSim
 {
@@ -12,6 +13,7 @@ namespace NotAHorseSim
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Map map;
         Player player;
 
         public Game1()
@@ -32,10 +34,6 @@ namespace NotAHorseSim
             // TODO: Add your initialization logic here
 
             base.Initialize();
-
-            player = new Player();
-            Vector2 position = new Vector2(0, 0);
-            player.Initialize(Content.Load<Texture2D>("Graphics/player.jpg"), position);
         }
 
         /// <summary>
@@ -47,7 +45,15 @@ namespace NotAHorseSim
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            int viewport_width = GraphicsDevice.Viewport.Width;
+            int viewport_height = GraphicsDevice.Viewport.Height;
+
             // TODO: use this.Content to load your game content here
+            map = new Map();
+            map.Initialize(Content, viewport_width, viewport_height);
+
+            player = new Player();
+            player.Initialize(Content.Load<Texture2D>("Graphics/person"), new Vector2(map.tiles_x / 2, map.tiles_y / 2));
         }
 
         /// <summary>
@@ -59,6 +65,8 @@ namespace NotAHorseSim
             // TODO: Unload any non ContentManager content here
         }
 
+
+        protected double lastStep = 0;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -70,8 +78,14 @@ namespace NotAHorseSim
                 Exit();
 
             // TODO: Add your update logic here
-
             base.Update(gameTime);
+
+            double thisTime = gameTime.TotalGameTime.TotalMilliseconds;
+            if (thisTime >= lastStep + 500)
+            {
+                player.Update();
+                lastStep = thisTime;
+            }
         }
 
         /// <summary>
@@ -87,9 +101,9 @@ namespace NotAHorseSim
             base.Draw(gameTime);
 
             spriteBatch.Begin();
+            map.Draw(spriteBatch);
             player.Draw(spriteBatch);
             spriteBatch.End();
-
         }
     }
 }
