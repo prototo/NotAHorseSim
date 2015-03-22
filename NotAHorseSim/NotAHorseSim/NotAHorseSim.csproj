@@ -55,6 +55,12 @@
     <Content Include="Content\Graphics\grass.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Graphics\mountain.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphics\mountain_edge.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Graphics\person.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
