@@ -25,11 +25,17 @@ namespace NotAHorseSim
             health = 100;
         }
 
-        public void Update()
+        public void Update(Map map)
         {
             Random rand = new Random();
-            position.X += rand.Next(-1, 2);
-            position.Y += rand.Next(-1, 2);
+            int x = (int) position.X + rand.Next(-1, 2);
+            int y = (int) position.Y + rand.Next(-1, 2);
+
+            if (!map.isOccupied(x, y))
+            {
+                position.X = x;
+                position.Y = y;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

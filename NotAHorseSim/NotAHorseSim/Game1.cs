@@ -81,9 +81,9 @@ namespace NotAHorseSim
             base.Update(gameTime);
 
             double thisTime = gameTime.TotalGameTime.TotalMilliseconds;
-            if (thisTime >= lastStep + 500)
+            if (thisTime >= lastStep + 100)
             {
-                player.Update();
+                player.Update(map);
                 lastStep = thisTime;
             }
         }
