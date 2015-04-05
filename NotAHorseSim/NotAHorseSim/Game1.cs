@@ -49,11 +49,10 @@ namespace NotAHorseSim
             int viewport_height = GraphicsDevice.Viewport.Height;
 
             // TODO: use this.Content to load your game content here
-            map = new Map();
-            map.Initialize(Content, viewport_width, viewport_height);
+            map = new Map(Content, viewport_width, viewport_height);
 
             player = new Player();
-            player.Initialize(Content.Load<Texture2D>("Graphics/person"), new Vector2(map.tiles_x / 2, map.tiles_y / 2));
+            player.Initialize(Content.Load<Texture2D>("Graphics/person"), map.getNode(map.tiles_x / 2, map.tiles_y / 2));
         }
 
         /// <summary>

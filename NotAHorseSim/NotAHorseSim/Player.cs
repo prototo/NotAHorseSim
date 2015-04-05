@@ -11,12 +11,13 @@ namespace NotAHorseSim
     class Player
     {
         public Texture2D texture;
-        public Vector2 position;
+        public MapNode position;
+        public Stack<MapNode> path;
 
         public bool active;
         public byte health;
 
-        public void Initialize(Texture2D playerTexture, Vector2 playerPosition)
+        public void Initialize(Texture2D playerTexture, MapNode playerPosition)
         {
             texture = playerTexture;
             position = playerPosition;
@@ -27,21 +28,39 @@ namespace NotAHorseSim
 
         public void Update(Map map)
         {
-            Random rand = new Random();
-            int x = (int) position.X + rand.Next(-1, 2);
-            int y = (int) position.Y + rand.Next(-1, 2);
-
-            if (!map.isOccupied(x, y))
+            while (path == null || path.Count == 0)
             {
-                position.X = x;
-                position.Y = y;
+                Random rand = new Random();
+
+                int dx = rand.Next(map.tiles_x);
+                int dy = rand.Next(map.tiles_y);
+
+                path = map.getPath(position, map.getNode(dx, dy));
+            }
+
+            if (path != null && path.Count > 0)
+            {
+                position = path.Pop();
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Vector2 draw_position = new Vector2(position.X * Map.TILESIZE, position.Y * Map.TILESIZE);
+            Vector2 draw_position = new Vector2(position.x * Map.TILESIZE, position.y * Map.TILESIZE);
             spriteBatch.Draw(texture, draw_position);
+
+            if (path != null && path.Count > 0)
+            {
+                foreach (MapNode node in path)
+                {
+                    Vector2 dp = new Vector2(node.x * Map.TILESIZE, node.y * Map.TILESIZE);
+                    Color c = new Color();
+                    c.R = 0;
+                    c.G = 0;
+                    c.B = 255;
+                    spriteBatch.Draw(texture, dp, c);
+                }
+            }
         }
 
         public int getWidth()
