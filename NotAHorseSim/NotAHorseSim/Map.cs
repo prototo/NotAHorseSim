@@ -34,14 +34,11 @@ namespace NotAHorseSim
 
         public MapNode getNode(int x, int y)
         {
-            try
-            {
-                return map[x, y];
-            }
-            catch
+            if (x < 0 || x >= tiles_x || y < 0 || y >= tiles_y)
             {
                 return null;
             }
+            return map[x, y];
         }
         
         protected void generateMap()
@@ -140,7 +137,6 @@ namespace NotAHorseSim
             MapNode[,] came_from = new MapNode[tiles_x, tiles_y];
             Boolean[,] closed = new Boolean[tiles_x, tiles_y];
             List<MapNode> open = new List<MapNode>();
-            List<String> open_ids = new List<String>();
 
             MapNode current;
 
@@ -152,23 +148,23 @@ namespace NotAHorseSim
             MapNodeComparer comparer = new MapNodeComparer();
             while (open.Count > 0)
             {
-                open.Sort(comparer);
+                // open.Sort(comparer);
 
                 current = open[0];
                 open.RemoveAt(0);
-                open_ids.Remove(current.getIdentifier());
 
-                if (current.getIdentifier() == goal.getIdentifier())
+                if (current.identifier == goal.identifier)
                 {
                     Stack<MapNode> path = new Stack<MapNode>();
                     MapNode from = came_from[current.x, current.y];
-
+                    
                     while (from != null)
                     {
+                        Vector2 position = new Vector2(from.x, from.y);
+
                         path.Push(from);
                         from = came_from[from.x, from.y];
                     }
-
                     return path;
                 }
 
@@ -183,16 +179,15 @@ namespace NotAHorseSim
                     int g = current.g + getMovementCost(current, neighbour);
                     int f = getDistance(neighbour, goal);
 
-                    if (!open_ids.Contains(neighbour.getIdentifier()) || neighbour.g > 0 && g < neighbour.g)
+                    if (!open.Contains(neighbour) || neighbour.g > 0 && g < neighbour.g)
                     {
                         came_from[neighbour.x, neighbour.y] = current;
                         neighbour.g = g;
                         neighbour.f = f;
 
-                        if (!open_ids.Contains(neighbour.getIdentifier()))
+                        if (!open.Contains(neighbour))
                         {
                             open.Add(neighbour);
-                            open_ids.Add(neighbour.getIdentifier());
                         }
                     }
                 }

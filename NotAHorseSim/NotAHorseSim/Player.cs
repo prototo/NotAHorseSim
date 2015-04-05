@@ -17,48 +17,44 @@ namespace NotAHorseSim
         public bool active;
         public byte health;
 
-        public void Initialize(Texture2D playerTexture, MapNode playerPosition)
+        private Color path_color;
+        private Random random;
+
+        public Player(Texture2D playerTexture, MapNode playerPosition, int seed)
         {
             texture = playerTexture;
             position = playerPosition;
 
             active = true;
             health = 100;
+
+            random = new Random(seed);
+            path_color = new Color(random.Next(200) + 50, 100, random.Next(200) + 50);
         }
 
         public void Update(Map map)
         {
             while (path == null || path.Count == 0)
             {
-                Random rand = new Random();
-
-                int dx = rand.Next(map.tiles_x);
-                int dy = rand.Next(map.tiles_y);
+                int dx = random.Next(map.tiles_x);
+                int dy = random.Next(map.tiles_y);
 
                 path = map.getPath(position, map.getNode(dx, dy));
             }
-
-            if (path != null && path.Count > 0)
-            {
-                position = path.Pop();
-            }
+            position = path.Pop();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 draw_position = new Vector2(position.x * Map.TILESIZE, position.y * Map.TILESIZE);
-            spriteBatch.Draw(texture, draw_position);
+            spriteBatch.Draw(texture, draw_position, path_color);
 
-            if (path != null && path.Count > 0)
+            if (false && path != null && path.Count > 0)
             {
                 foreach (MapNode node in path)
                 {
                     Vector2 dp = new Vector2(node.x * Map.TILESIZE, node.y * Map.TILESIZE);
-                    Color c = new Color();
-                    c.R = 0;
-                    c.G = 0;
-                    c.B = 255;
-                    spriteBatch.Draw(texture, dp, c);
+                    spriteBatch.Draw(texture, dp, path_color);
                 }
             }
         }

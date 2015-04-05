@@ -14,7 +14,9 @@ namespace NotAHorseSim
         SpriteBatch spriteBatch;
 
         Map map;
-        Player player;
+        Player[] guys;
+
+        int players = 10;
 
         public Game1()
             : base()
@@ -51,8 +53,11 @@ namespace NotAHorseSim
             // TODO: use this.Content to load your game content here
             map = new Map(Content, viewport_width, viewport_height);
 
-            player = new Player();
-            player.Initialize(Content.Load<Texture2D>("Graphics/person"), map.getNode(map.tiles_x / 2, map.tiles_y / 2));
+            guys = new Player[players];
+            for (int x = 0; x < players; x++)
+            {
+                guys[x] = new Player(Content.Load<Texture2D>("Graphics/person"), map.getNode((int) map.tiles_x / 2, (int) map.tiles_y / 2), x*x*x);
+            }
         }
 
         /// <summary>
@@ -82,8 +87,11 @@ namespace NotAHorseSim
             double thisTime = gameTime.TotalGameTime.TotalMilliseconds;
             if (thisTime >= lastStep + 100)
             {
-                player.Update(map);
                 lastStep = thisTime;
+                foreach (Player guy in guys)
+                {
+                    guy.Update(map);
+                }
             }
         }
 
@@ -101,7 +109,10 @@ namespace NotAHorseSim
 
             spriteBatch.Begin();
             map.Draw(spriteBatch);
-            player.Draw(spriteBatch);
+            foreach (Player guy in guys)
+            {
+                guy.Draw(spriteBatch);
+            }
             spriteBatch.End();
         }
     }

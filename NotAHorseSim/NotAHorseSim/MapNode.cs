@@ -14,11 +14,14 @@ namespace NotAHorseSim
         public int g { get; set; }
         public int f { get; set; }
 
+        public String identifier { get; private set; }
+
         public MapNode(int x, int y, Boolean occupied = false)
         {
             this.x = x;
             this.y = y;
             this.occupied = occupied;
+            this.identifier = getIdentifier();
         }
 
         public int[] getCoords()
@@ -26,7 +29,7 @@ namespace NotAHorseSim
             return new int[] {x, y};
         }
 
-        public String getIdentifier()
+        private String getIdentifier()
         {
             return String.Format("{0},{1}", x, y);
         }
